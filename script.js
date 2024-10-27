@@ -27,43 +27,38 @@ function isMobile() {
   return /Mobi|Android/i.test(navigator.userAgent);
 }
 
-// Add mobile controls if detected
+// Add mobile touch controls if detected
 function addMobileControls() {
   const controlsContainer = document.createElement('div');
   controlsContainer.id = 'mobileControls';
   controlsContainer.style.position = 'absolute';
   controlsContainer.style.bottom = '20px';
   controlsContainer.style.width = '100%';
+  controlsContainer.style.height = '100px';
   controlsContainer.style.display = 'flex';
-  controlsContainer.style.justifyContent = 'center';
-  controlsContainer.style.gap = '10px';
-
-  // Left button
-  const leftButton = document.createElement('button');
-  leftButton.innerText = 'Left';
-  leftButton.style.padding = '20px';
-  leftButton.style.fontSize = '18px';
-  leftButton.addEventListener('touchstart', () => (keys.ArrowLeft = true));
-  leftButton.addEventListener('touchend', () => (keys.ArrowLeft = false));
-
-  // Right button
-  const rightButton = document.createElement('button');
-  rightButton.innerText = 'Right';
-  rightButton.style.padding = '20px';
-  rightButton.style.fontSize = '18px';
-  rightButton.addEventListener('touchstart', () => (keys.ArrowRight = true));
-  rightButton.addEventListener('touchend', () => (keys.ArrowRight = false));
-
-  // Shoot button
-  const shootButton = document.createElement('button');
-  shootButton.innerText = 'Shoot';
-  shootButton.style.padding = '20px';
-  shootButton.style.fontSize = '18px';
-  shootButton.addEventListener('touchstart', () => (keys.Space = true));
+  controlsContainer.style.justifyContent = 'space-between';
   
-  controlsContainer.appendChild(leftButton);
-  controlsContainer.appendChild(rightButton);
-  controlsContainer.appendChild(shootButton);
+  // Create touch areas
+  const leftTouch = document.createElement('div');
+  leftTouch.className = 'touchArea';
+  leftTouch.style.flex = '1';
+  leftTouch.addEventListener('touchstart', () => (keys.ArrowLeft = true));
+  leftTouch.addEventListener('touchend', () => (keys.ArrowLeft = false));
+
+  const rightTouch = document.createElement('div');
+  rightTouch.className = 'touchArea';
+  rightTouch.style.flex = '1';
+  rightTouch.addEventListener('touchstart', () => (keys.ArrowRight = true));
+  rightTouch.addEventListener('touchend', () => (keys.ArrowRight = false));
+
+  const shootTouch = document.createElement('div');
+  shootTouch.className = 'touchArea';
+  shootTouch.style.flex = '1';
+  shootTouch.addEventListener('touchstart', () => (keys.Space = true));
+
+  controlsContainer.appendChild(leftTouch);
+  controlsContainer.appendChild(shootTouch);
+  controlsContainer.appendChild(rightTouch);
   document.body.appendChild(controlsContainer);
 }
 
