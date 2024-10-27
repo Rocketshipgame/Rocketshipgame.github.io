@@ -240,6 +240,25 @@ function endGame() {
   }
 
   displayHighScores();
+
+  // Add the restart button dynamically below the top scores
+  const restartButton = document.createElement('button');
+  restartButton.id = 'restartBtn';
+  restartButton.innerText = 'Restart Game';
+  restartButton.style.marginTop = '20px'; // Add some space from the top scores
+  restartButton.style.padding = '10px 20px';
+  restartButton.style.fontSize = '18px';
+  restartButton.style.cursor = 'pointer';
+  restartButton.style.backgroundColor = '#ff5733';
+  restartButton.style.color = 'white';
+  restartButton.style.border = 'none';
+  restartButton.style.borderRadius = '5px';
+
+  restartButton.addEventListener('click', () => {
+    location.reload(); // Reload the page to restart the game
+  });
+
+  gameOverDisplay.appendChild(restartButton); // Append the button to the gameOver display
 }
 
 function displayHighScores() {
