@@ -44,10 +44,11 @@ body {
 /* Enhanced Asteroid */
 .asteroid {
   position: absolute;
-  width: 50px;   /* Adjust size as necessary */
-  height: 50px;  /* Adjust size as necessary */
+  width: 50px;
+  height: 50px;
   background: url('Asteroid.png') no-repeat center/contain;
   z-index: 3;
+  transform-origin: center;  /* Ensures the asteroid rotates around its center */
 }
 
 /* Asteroid Craters */
