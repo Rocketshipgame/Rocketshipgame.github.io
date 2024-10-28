@@ -107,6 +107,11 @@ class Asteroid {
     this.x = x;
     this.y = 0;
     this.speed = speed;
+
+    // Random rotation speed between -3 and 3 degrees per update
+    this.rotationSpeed = (Math.random() * 6) - 3;  // Random speed between -3 and 3
+    this.currentRotation = 0;  // Initial rotation
+
     this.element = document.createElement('div');
     this.element.className = 'asteroid';
     this.element.style.left = `${x}px`;
@@ -117,6 +122,10 @@ class Asteroid {
   update() {
     this.y += this.speed;
     this.element.style.top = `${this.y}px`;
+
+    // Update the rotation
+    this.currentRotation += this.rotationSpeed;
+    this.element.style.transform = `rotate(${this.currentRotation}deg)`;
   }
 
   remove() {
