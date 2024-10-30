@@ -16,8 +16,8 @@ body {
   position: relative;
   width: 100%;
   height: 100%;
-  max-width: 100vw;
-  max-height: 100vh;
+  max-width: 95vw;
+  max-height: 95vh;
   border: 2px solid white;
   overflow: hidden;
   background: black;
