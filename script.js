@@ -170,9 +170,17 @@ function update() {
   rocket.style.left = `${rocketX}px`;
 
   if (keys.Space) {
-    bullets.push(new Bullet(rocketX + 18, rocketY));
-    keys.Space = false;
-  }
+  // Adjust the bullet's starting x position to be centered on the rocket
+  const bulletX = rocketX + (rocket.offsetWidth / 2) - 2.5; // Adjusting for bullet width (5px)
+  
+  // Adjust the bullet's starting y position to be slightly higher up the rocket
+  const bulletY = rocketY - 10; // Move it up slightly above the rocket
+
+  // Create the bullet with adjusted x and y
+  bullets.push(new Bullet(bulletX, bulletY));
+  keys.Space = false;
+}
+
 
   bullets.forEach((bullet, bulletIndex) => {
     bullet.update();
