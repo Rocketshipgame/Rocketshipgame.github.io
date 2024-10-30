@@ -30,24 +30,27 @@ function isMobile() {
 function addMobileControls() {
   const controlsContainer = document.createElement('div');
   controlsContainer.id = 'mobileControls';
+
+  // Add a class to the body or game container when mobile controls are added
+  document.body.classList.add('mobile-controls-active');
   
   // Create left button (transparent, no text)
   const leftButton = document.createElement('button');
-  leftButton.style.width = '80px';  // Set button size
+  leftButton.style.width = '80px';
   leftButton.style.height = '80px';
   leftButton.addEventListener('touchstart', () => (keys.ArrowLeft = true));
   leftButton.addEventListener('touchend', () => (keys.ArrowLeft = false));
 
   // Create right button (transparent, no text)
   const rightButton = document.createElement('button');
-  rightButton.style.width = '80px';  // Set button size
+  rightButton.style.width = '80px';
   rightButton.style.height = '80px';
   rightButton.addEventListener('touchstart', () => (keys.ArrowRight = true));
   rightButton.addEventListener('touchend', () => (keys.ArrowRight = false));
 
   // Create shoot button (transparent, no text)
   const shootButton = document.createElement('button');
-  shootButton.style.width = '80px';  // Set button size
+  shootButton.style.width = '80px';
   shootButton.style.height = '80px';
   shootButton.addEventListener('touchstart', () => (keys.Space = true));
 
