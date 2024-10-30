@@ -102,14 +102,18 @@ body {
   box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.5);
 }
 
-/* Score Counter */
-#score {
+/* Default styles for score and game over text */
+#score, #gameOver p {
   position: absolute;
-  top: 20px;
-  left: 20px;
   color: white;
-  font-size: 24px;
+  font-size: 24px;  /* Default font size */
   z-index: 10;
+}
+
+/* Default positioning for score */
+#score {
+  top: 10px;
+  left: 10px;
 }
 
 /* CSS Stars */
@@ -120,19 +124,39 @@ body {
   background: white;
 }
 
-/* Game Over and Restart */
+/* Positioning for game over text */
 #gameOver {
-  position: absolute;
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
-  color: white;
   text-align: center;
   display: none;
 }
 
 #gameOver p {
-  font-size: 30px;
+  font-size: 2em; /* Default font size for game over text */
+}
+
+/* Media queries to adjust text sizes for larger screens */
+@media (min-width: 768px) {
+  #score, #gameOver p {
+    font-size: 18px; /* Smaller font size on larger screens */
+  }
+
+  #gameOver p {
+    font-size: 1.5em; /* Smaller game over text on larger screens */
+  }
+}
+
+/* Media query for small screens (mobile) */
+@media (max-width: 767px) {
+  #score, #gameOver p {
+    font-size: 20px; /* Larger font size on mobile */
+  }
+
+  #gameOver p {
+    font-size: 1.8em; /* Adjusted game over text size for mobile */
+  }
 }
 
 #restartBtn {
