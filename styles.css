@@ -163,7 +163,7 @@ body {
   #rocket {
     width: 8vw;  /* Adjust size based on screen width */
     height: 16vw;
-    bottom: 2vh;
+    bottom: 10vh;
   }
 
   #score {
