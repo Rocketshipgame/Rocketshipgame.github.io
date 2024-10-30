@@ -57,8 +57,6 @@ body {
   z-index: 10;
 }
 
-
-
 /* CSS Bullet */
 .bullet {
   position: absolute;
@@ -106,7 +104,7 @@ body {
 #score, #gameOver p {
   position: absolute;
   color: white;
-  font-size: 24px;  /* Default font size */
+  font-size: 10px;  /* Default font size */
   z-index: 10;
 }
 
