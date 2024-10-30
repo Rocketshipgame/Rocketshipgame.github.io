@@ -4,13 +4,6 @@
   box-sizing: border-box;
 }
 
-/* Prevents scrolling on the page */
-html, body {
-  overflow: hidden;
-  height: 100%;
-  margin: 0;
-}
-
 body {
   background-color: black;
   display: flex;
@@ -20,26 +13,40 @@ body {
 }
 
 #gameContainer {
-  width: 100vw;
-  height: 100vh;
-  max-width: 100%;
-  max-height: 100%;
-  overflow: hidden;  /* Prevents internal scrolling */
   position: relative;
+  width: 100%;
+  height: 100%;
+  max-width: 100vw;
+  max-height: 100vh;
+  border: 2px solid white;
+  overflow: hidden;
+  background: black;
 }
 
-
-
+/* Improved Rocket Ship */
 #rocket {
   position: absolute;
   bottom: 20px;
   left: 50%;
   transform: translateX(-50%);
-  width: 40px;  /* Set to match your original dimensions */
-  height: 80px; /* Set to match your original dimensions */
+  width: 40px;
+  height: 80px;
   z-index: 5;
 }
 
+/* Rocket Ship Flame */
+#rocket::after {
+  content: '';
+  position: absolute;
+  bottom: -15px;
+  left: 50%;
+  width: 20px;
+  height: 20px;
+  background: radial-gradient(circle, orange, yellow, red);
+  clip-path: polygon(50% 0%, 100% 100%, 0% 100%);
+  transform: translateX(-50%);
+  z-index: -1;
+}
 
 /* CSS Bullet */
 .bullet {
@@ -138,7 +145,7 @@ body {
   background-color: #ff2e00;
 }
 
-/* New Mobile Touch Controls */
+/* Mobile Touch Controls (Optional) */
 #mobileControls {
   display: flex;
   justify-content: space-between;
@@ -151,28 +158,10 @@ body {
 
 .touchArea {
   flex: 1;
-  background-color: rgba(255, 255, 255, 0.1); /* Semi-transparent for indication */
+  background-color: rgba(255, 255, 255, 0.1); /* Semi-transparent touch area */
   height: 100%; /* Covers the full height of the control area */
 }
 
 .touchArea:active {
   background-color: rgba(255, 255, 255, 0.2); /* Highlight when touched */
-}
-
-@media (max-width: 768px) {
-  #rocket {
-    width: 8vw;  /* Adjust size based on screen width */
-    height: 16vw;
-    bottom: 2vh;
-  }
-
-  #score {
-    font-size: 4vw;
-    top: 5vw;
-  }
-
-  /* Adjust Game Over and controls for a better mobile fit */
-  #gameOver {
-    font-size: 5vw;
-  }
 }
