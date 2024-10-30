@@ -26,11 +26,11 @@ body {
 /* Improved Rocket Ship */
 #rocket {
   position: absolute;
-  bottom: 20px;
+  bottom: 120px; /* Adjust this value to move the rocket above the touch controls */
   left: 50%;
   transform: translateX(-50%);
-  width: 40px;
-  height: 80px;
+  width: 40px;  /* Set to match your original dimensions */
+  height: 80px; /* Set to match your original dimensions */
   z-index: 5;
 }
 
