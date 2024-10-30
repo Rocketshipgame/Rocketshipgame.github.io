@@ -16,8 +16,8 @@ body {
   position: relative;
   width: 100%;
   height: 100%;
-  max-width: 95vw;
-  max-height: 95vh;
+  max-width: 100vw;
+  max-height: 100vh;
   border: 2px solid white;
   overflow: hidden;
   background: black;
@@ -26,11 +26,11 @@ body {
 /* Improved Rocket Ship */
 #rocket {
   position: absolute;
-  bottom: 120px; /* Adjust this value to move the rocket above the touch controls */
+  bottom: 20px;
   left: 50%;
   transform: translateX(-50%);
-  width: 40px;  /* Set to match your original dimensions */
-  height: 80px; /* Set to match your original dimensions */
+  width: 40px;
+  height: 80px;
   z-index: 5;
 }
 
