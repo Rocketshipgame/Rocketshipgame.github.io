@@ -30,15 +30,33 @@ body {
 
 
 
+/* Default position of the rocket on desktop and mobile without controls */
 #rocket {
   position: absolute;
-  bottom: 20px;
+  bottom: 20px; /* Default position */
   left: 50%;
   transform: translateX(-50%);
-  width: 40px;  /* Set to match your original dimensions */
-  height: 80px; /* Set to match your original dimensions */
+  width: 40px;
+  height: 80px;
   z-index: 5;
 }
+
+/* When mobile controls are active, move the rocket higher */
+.mobile-controls-active #rocket {
+  bottom: 120px; /* Move the rocket higher to stay above the mobile controls */
+}
+
+/* Mobile touch controls container */
+#mobileControls {
+  position: absolute;
+  bottom: 20px;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+  z-index: 10;
+}
+
 
 
 /* CSS Bullet */
