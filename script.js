@@ -34,31 +34,36 @@ function addMobileControls() {
   controlsContainer.style.position = 'absolute';
   controlsContainer.style.bottom = '20px';
   controlsContainer.style.width = '100%';
-  controlsContainer.style.height = '100px';
   controlsContainer.style.display = 'flex';
-  controlsContainer.style.justifyContent = 'space-between';
-  
-  // Create touch areas
-  const leftTouch = document.createElement('div');
-  leftTouch.className = 'touchArea';
-  leftTouch.style.flex = '1';
-  leftTouch.addEventListener('touchstart', () => (keys.ArrowLeft = true));
-  leftTouch.addEventListener('touchend', () => (keys.ArrowLeft = false));
+  controlsContainer.style.justifyContent = 'center';
+  controlsContainer.style.gap = '10px';
 
-  const rightTouch = document.createElement('div');
-  rightTouch.className = 'touchArea';
-  rightTouch.style.flex = '1';
-  rightTouch.addEventListener('touchstart', () => (keys.ArrowRight = true));
-  rightTouch.addEventListener('touchend', () => (keys.ArrowRight = false));
+  // Left button
+  const leftButton = document.createElement('button');
+  leftButton.innerText = 'Left';
+  leftButton.style.padding = '20px';
+  leftButton.style.fontSize = '18px';
+  leftButton.addEventListener('touchstart', () => (keys.ArrowLeft = true));
+  leftButton.addEventListener('touchend', () => (keys.ArrowLeft = false));
 
-  const shootTouch = document.createElement('div');
-  shootTouch.className = 'touchArea';
-  shootTouch.style.flex = '1';
-  shootTouch.addEventListener('touchstart', () => (keys.Space = true));
+  // Right button
+  const rightButton = document.createElement('button');
+  rightButton.innerText = 'Right';
+  rightButton.style.padding = '20px';
+  rightButton.style.fontSize = '18px';
+  rightButton.addEventListener('touchstart', () => (keys.ArrowRight = true));
+  rightButton.addEventListener('touchend', () => (keys.ArrowRight = false));
 
-  controlsContainer.appendChild(leftTouch);
-  controlsContainer.appendChild(shootTouch);
-  controlsContainer.appendChild(rightTouch);
+  // Shoot button
+  const shootButton = document.createElement('button');
+  shootButton.innerText = 'Shoot';
+  shootButton.style.padding = '20px';
+  shootButton.style.fontSize = '18px';
+  shootButton.addEventListener('touchstart', () => (keys.Space = true));
+
+  controlsContainer.appendChild(leftButton);
+  controlsContainer.appendChild(rightButton);
+  controlsContainer.appendChild(shootButton);
   document.body.appendChild(controlsContainer);
 }
 
@@ -173,11 +178,11 @@ function update() {
     keys.Space = false;
   }
 
-  bullets.forEach((bullet, index) => {
+  bullets.forEach((bullet, bulletIndex) => {
     bullet.update();
     if (bullet.y < 0) {
       bullet.remove();
-      bullets.splice(index, 1);
+      bullets.splice(bulletIndex, 1);
     }
   });
 
@@ -206,6 +211,10 @@ function update() {
         bullet.y < asteroid.y + 50 &&
         bullet.y + 10 > asteroid.y
       ) {
+        // Explosion effect at the asteroid's position
+        createExplosion(asteroid.x + 25, asteroid.y + 25); // Adjust coordinates as necessary
+
+        // Remove the bullet and asteroid
         bullets.splice(bulletIndex, 1);
         bullet.remove();
 
@@ -225,6 +234,45 @@ function update() {
   });
 
   stars.forEach((star) => star.update());
+}
+
+// Function to create explosion dots that shoot to the corners
+function createExplosion(x, y) {
+  const corners = [
+    { x: 0, y: 0 },                               // Top-left corner
+    { x: window.innerWidth, y: 0 },               // Top-right corner
+    { x: 0, y: window.innerHeight },              // Bottom-left corner
+    { x: window.innerWidth, y: window.innerHeight } // Bottom-right corner
+  ];
+
+  corners.forEach((corner) => {
+    const dot = document.createElement('div');
+    dot.className = 'explosion-dot';
+    dot.style.position = 'absolute';
+    dot.style.left = `${x}px`;
+    dot.style.top = `${y}px`;
+    dot.style.width = '5px';
+    dot.style.height = '5px';
+    dot.style.backgroundColor = 'white';
+    dot.style.borderRadius = '50%';
+
+    // Move the dot to the corner using left and top positions
+    const deltaX = corner.x - x;
+    const deltaY = corner.y - y;
+
+    dot.style.transition = 'left 1s linear, top 1s linear';
+    setTimeout(() => {
+      dot.style.left = `${corner.x}px`;
+      dot.style.top = `${corner.y}px`;
+    }, 10); // Small delay to ensure transition works
+
+    gameContainer.appendChild(dot);
+
+    // Remove the dot after the animation
+    setTimeout(() => {
+      dot.remove();
+    }, 1000); // Duration of the animation
+  });
 }
 
 function createStars() {
@@ -250,11 +298,10 @@ function endGame() {
 
   displayHighScores();
 
-  // Add the restart button dynamically below the top scores
   const restartButton = document.createElement('button');
   restartButton.id = 'restartBtn';
   restartButton.innerText = 'Restart Game';
-  restartButton.style.marginTop = '20px'; // Add some space from the top scores
+  restartButton.style.marginTop = '20px';
   restartButton.style.padding = '10px 20px';
   restartButton.style.fontSize = '18px';
   restartButton.style.cursor = 'pointer';
@@ -264,10 +311,10 @@ function endGame() {
   restartButton.style.borderRadius = '5px';
 
   restartButton.addEventListener('click', () => {
-    location.reload(); // Reload the page to restart the game
+    location.reload();
   });
 
-  gameOverDisplay.appendChild(restartButton); // Append the button to the gameOver display
+  gameOverDisplay.appendChild(restartButton);
 }
 
 function displayHighScores() {
