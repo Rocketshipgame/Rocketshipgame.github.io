@@ -27,43 +27,36 @@ function isMobile() {
   return /Mobi|Android/i.test(navigator.userAgent);
 }
 
-// Add mobile touch controls if detected
 function addMobileControls() {
   const controlsContainer = document.createElement('div');
   controlsContainer.id = 'mobileControls';
-  controlsContainer.style.position = 'absolute';
-  controlsContainer.style.bottom = '20px';
-  controlsContainer.style.width = '100%';
-  controlsContainer.style.display = 'flex';
-  controlsContainer.style.justifyContent = 'center';
-  controlsContainer.style.gap = '10px';
-
-  // Left button
+  
+  // Create left button (transparent, no text)
   const leftButton = document.createElement('button');
-  leftButton.innerText = 'Left';
-  leftButton.style.padding = '20px';
-  leftButton.style.fontSize = '18px';
+  leftButton.style.width = '80px';  // Set button size
+  leftButton.style.height = '80px';
   leftButton.addEventListener('touchstart', () => (keys.ArrowLeft = true));
   leftButton.addEventListener('touchend', () => (keys.ArrowLeft = false));
 
-  // Right button
+  // Create right button (transparent, no text)
   const rightButton = document.createElement('button');
-  rightButton.innerText = 'Right';
-  rightButton.style.padding = '20px';
-  rightButton.style.fontSize = '18px';
+  rightButton.style.width = '80px';  // Set button size
+  rightButton.style.height = '80px';
   rightButton.addEventListener('touchstart', () => (keys.ArrowRight = true));
   rightButton.addEventListener('touchend', () => (keys.ArrowRight = false));
 
-  // Shoot button
+  // Create shoot button (transparent, no text)
   const shootButton = document.createElement('button');
-  shootButton.innerText = 'Shoot';
-  shootButton.style.padding = '20px';
-  shootButton.style.fontSize = '18px';
+  shootButton.style.width = '80px';  // Set button size
+  shootButton.style.height = '80px';
   shootButton.addEventListener('touchstart', () => (keys.Space = true));
 
+  // Append buttons to controls container
   controlsContainer.appendChild(leftButton);
   controlsContainer.appendChild(rightButton);
   controlsContainer.appendChild(shootButton);
+
+  // Append the controls container to the body
   document.body.appendChild(controlsContainer);
 }
 
