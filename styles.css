@@ -138,35 +138,46 @@ body {
   background-color: #ff2e00;
 }
 
-/* New Mobile Touch Controls */
+/* Mobile touch controls container */
 #mobileControls {
-  display: flex;
-  justify-content: space-between;
   position: absolute;
   bottom: 20px;
-  width: 80%;
-  height: 80px;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  gap: 10px;
   z-index: 10;
-  opacity:5;
 }
 
-.touchArea {
-  flex: 1;
-  background-color: rgba(255, 255, 255, 0.1); /* Semi-transparent for indication */
-  height: 100%; /* Covers the full height of the control area */
+/* Transparent buttons without text */
+#mobileControls button {
+  width: 80px;              /* Set a fixed width */
+  height: 80px;             /* Set a fixed height */
+  background-color: rgba(255, 255, 255, 0.1); /* Make the button transparent */
+  border: none;
+  border-radius: 50%;       /* Rounded buttons (optional) */
+  cursor: pointer;
+  transition: background-color 0.3s ease;
 }
 
-.touchArea:active {
-  background-color: rgba(255, 255, 255, 0.2); /* Highlight when touched */
+/* On button press (active) */
+#mobileControls button:active {
+  background-color: rgba(255, 255, 255, 0.3); /* Highlight when pressed */
+  transform: scale(0.95); /* Add a slight press effect */
 }
 
-@media (max-width: 768px) {
-  #rocket {
-    width: 8vw;  /* Adjust size based on screen width */
-    height: 16vw;
-    bottom: 10vh;
+/* Remove text inside the buttons */
+#mobileControls button::before {
+  content: ""; /* No text */
+}
+
+/* Adjust button size for smaller screens (optional) */
+@media (max-width: 600px) {
+  #mobileControls button {
+    width: 60px;
+    height: 60px;
   }
-
+}
   #score {
     font-size: 4vw;
     top: 5vw;
