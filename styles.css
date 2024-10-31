@@ -32,7 +32,7 @@ body {
 
 #rocket {
   position: absolute;
-  bottom: 50px;
+  bottom: 55px;
   left: 50%;
   transform: translateX(-50%);
   width: 40px;  /* Set to match your original dimensions */
