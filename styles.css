@@ -30,32 +30,16 @@ body {
 
 
 
-/* Default position of the rocket on desktop and mobile without controls */
 #rocket {
   position: absolute;
-  bottom: 20px; /* Default position */
+  bottom: 20px;
   left: 50%;
   transform: translateX(-50%);
-  width: 40px;
-  height: 80px;
+  width: 40px;  /* Set to match your original dimensions */
+  height: 80px; /* Set to match your original dimensions */
   z-index: 5;
 }
 
-/* When mobile controls are active, move the rocket higher */
-.mobile-controls-active #rocket {
-  bottom: 120px; /* Move the rocket higher to stay above the mobile controls */
-}
-
-/* Mobile touch controls container */
-#mobileControls {
-  position: absolute;
-  bottom: 20px;
-  width: 100%;
-  display: flex;
-  justify-content: center;
-  gap: 10px;
-  z-index: 10;
-}
 
 /* CSS Bullet */
 .bullet {
@@ -100,18 +84,14 @@ body {
   box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.5);
 }
 
-/* Default styles for score and game over text */
-#score, #gameOver p {
-  position: absolute;
-  color: white;
-  font-size: 10px;  /* Default font size */
-  z-index: 10;
-}
-
-/* Default positioning for score */
+/* Score Counter */
 #score {
-  top: 10px;
-  left: 10px;
+  position: absolute;
+  top: 20px;
+  left: 20px;
+  color: white;
+  font-size: 24px;
+  z-index: 10;
 }
 
 /* CSS Stars */
@@ -122,39 +102,19 @@ body {
   background: white;
 }
 
-/* Positioning for game over text */
+/* Game Over and Restart */
 #gameOver {
+  position: absolute;
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
+  color: white;
   text-align: center;
   display: none;
 }
 
 #gameOver p {
-  font-size: 2em; /* Default font size for game over text */
-}
-
-/* Media queries to adjust text sizes for larger screens */
-@media (min-width: 768px) {
-  #score, #gameOver p {
-    font-size: 18px; /* Smaller font size on larger screens */
-  }
-
-  #gameOver p {
-    font-size: 1.5em; /* Smaller game over text on larger screens */
-  }
-}
-
-/* Media query for small screens (mobile) */
-@media (max-width: 767px) {
-  #score, #gameOver p {
-    font-size: 20px; /* Larger font size on mobile */
-  }
-
-  #gameOver p {
-    font-size: 1.8em; /* Adjusted game over text size for mobile */
-  }
+  font-size: 30px;
 }
 
 #restartBtn {
@@ -219,13 +179,13 @@ body {
   }
 }
   #score {
-    font-size: 4vw;
+    font-size: 24px;
     top: 5vw;
   }
 
   /* Adjust Game Over and controls for a better mobile fit */
   #gameOver {
-    font-size: 5vw;
+    font-size: 30px;
   }
 }
 .explosion-dot {
