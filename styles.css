@@ -206,3 +206,16 @@ body {
     opacity: 0;
   }
 }
+#startGameButton {
+  padding: 10px 20px;
+  font-size: 1.2em;
+  cursor: pointer;
+  background-color: #ff5733;
+  border: none;
+  color: white;
+  border-radius: 5px;
+}
+
+#startGameButton:hover {
+  background-color: #ff2e00;
+}
