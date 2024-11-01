@@ -350,8 +350,7 @@ window.addEventListener('load', () => {
   // Show the endgame menu right when the game loads
   document.getElementById('gameOver').style.display = 'block';
   document.getElementById('gameOver').innerHTML = `
-    <p>Welcome to the Game!</p>
-    <button id="startGameButton">Start Game</button>
+    <button id="startGameButton">Start</button>
   `;
   
   // Pause the game loop initially
