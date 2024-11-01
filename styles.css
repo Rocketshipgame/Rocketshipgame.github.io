@@ -219,3 +219,18 @@ body {
 #startGameButton:hover {
   background-color: #ff2e00;
 }
+#bangarangButton {
+  padding: 10px 20px;
+  font-size: 1.2em;
+  cursor: pointer;
+  background-color: #4CAF50; /* Customize color */
+  color: white;
+  border: none;
+  border-radius: 5px;
+  margin-top: 10px;
+}
+
+#bangarangButton:hover {
+  background-color: #45a049; /* Hover effect */
+}
+
