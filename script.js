@@ -352,6 +352,7 @@ window.addEventListener('load', () => {
   document.getElementById('gameOver').innerHTML = `
     <p>Welcome to the Game!</p>
     <button id="startGameButton">Start Game</button>
+    <button id="bangarangButton">BangarangCrafts</button>
   `;
   
   // Pause the game loop initially
@@ -362,6 +363,9 @@ window.addEventListener('load', () => {
     document.getElementById('gameOver').style.display = 'none'; // Hide the endgame menu
     gameActive = true; // Set the game to active
     gameLoop(); // Start the game loop
+   // BangarangCrafts button functionality
+    document.getElementById('bangarangButton').addEventListener('click', () => {
+      window.open('https://www.bangarangcrafts.co.za', '_blank');  
   });
 });
 
