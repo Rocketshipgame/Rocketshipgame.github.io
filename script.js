@@ -347,22 +347,22 @@ if (isMobile()) {
 }
 
 window.addEventListener('load', () => {
-  if (!isGameStarted) {
-    document.getElementById('gameOver').style.display = 'block';
-    document.getElementById('gameOver').innerHTML = `
-      <p>Welcome to the Game!</p>
-      <button id="startGameButton">Start Game</button>
-    `;
-    
-    gameActive = false;
+  // Show the endgame menu right when the game loads
+  document.getElementById('gameOver').style.display = 'block';
+  document.getElementById('gameOver').innerHTML = `
+    <p>Welcome to the Game!</p>
+    <button id="startGameButton">Start Game</button>
+  `;
+  
+  // Pause the game loop initially
+  gameActive = false;
 
-    document.getElementById('startGameButton').addEventListener('click', () => {
-      document.getElementById('gameOver').style.display = 'none';
-      isGameStarted = true; // Set the flag to true when starting the game
-      gameActive = true;
-      gameLoop();
-    });
-  }
+  // Start the game when the player clicks the Start Game button
+  document.getElementById('startGameButton').addEventListener('click', () => {
+    document.getElementById('gameOver').style.display = 'none'; // Hide the endgame menu
+    gameActive = true; // Set the game to active
+    gameLoop(); // Start the game loop
+  });
 });
 
 
