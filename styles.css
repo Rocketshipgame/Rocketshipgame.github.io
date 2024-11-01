@@ -111,6 +111,7 @@ body {
   color: white;
   text-align: center;
   display: none;
+  z-index: 1000;
 }
 
 #gameOver p {
