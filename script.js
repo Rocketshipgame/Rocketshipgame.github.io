@@ -350,7 +350,7 @@ window.addEventListener('load', () => {
   // Show the endgame menu right when the game loads
   document.getElementById('gameOver').style.display = 'block';
   document.getElementById('gameOver').innerHTML = `
-    <H1>>Rocket Ship</H1>
+    <H1>Rocket Ship</H1>
     <p>Created buy</p>
     <a href="https://bangarangcrafts.co.za/">BangarangCrafts</a>
     <button id="startGameButton">Start Game</button>
