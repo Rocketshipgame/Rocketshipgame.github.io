@@ -347,29 +347,31 @@ if (isMobile()) {
 }
 
 window.addEventListener('load', () => {
-  if (!isGameStarted) {
-    document.getElementById('gameOver').style.display = 'block';
-    document.getElementById('gameOver').innerHTML = `
-      <p>Welcome to the Game!</p>
-      <button id="startGameButton">Start Game</button>
-      <button id="bangarangButton">BangarangCrafts</button>
-    `;
-    
-    gameActive = false;
+   if (!isGameStarted) {
+      document.getElementById('gameOver').style.display = 'block';
+      document.getElementById('gameOver').innerHTML = `
+        <p>Welcome to the Game!</p>
+        <button id="startGameButton">Start Game</button>
+        <button id="storeButton">BangarangCrafts</button>
+      `;
+      
+      // Pause the game loop initially
+      gameActive = false;
 
-    // Start Game button functionality
-    document.getElementById('startGameButton').addEventListener('click', () => {
-      document.getElementById('gameOver').style.display = 'none';
-      isGameStarted = true;
-      gameActive = true;
-      gameLoop();
-    });
+      // Start Game button event listener
+      document.getElementById('startGameButton').addEventListener('click', () => {
+         document.getElementById('gameOver').style.display = 'none';
+         isGameStarted = true; 
+         gameActive = true; 
+         gameLoop();
+      });
 
-    // BangarangCrafts button functionality
-    document.getElementById('bangarangButton').addEventListener('click', () => {
-      window.open('https://www.bangarangcrafts.co.za', '_blank');
-    });
-  }
+      // Store button event listener to open link
+      document.getElementById('storeButton').addEventListener('click', () => {
+         window.open('https://www.bangarangcrafts.co.za', '_blank');
+      });
+   }
 });
+
 
 
