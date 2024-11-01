@@ -351,7 +351,7 @@ window.addEventListener('load', () => {
   document.getElementById('gameOver').style.display = 'block';
   document.getElementById('gameOver').innerHTML = `
     <H1>Rocket Ship</H1>
-    <p>Created buy</p>
+    <p>Created By</p>
     <a href="https://bangarangcrafts.co.za/">BangarangCrafts</a>
     <button id="startGameButton">Start Game</button>
   `;
