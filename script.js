@@ -350,9 +350,9 @@ window.addEventListener('load', () => {
   // Show the endgame menu right when the game loads
   document.getElementById('gameOver').style.display = 'block';
   document.getElementById('gameOver').innerHTML = `
-    <p>Welcome to the Game!</p>
+    <p>Created buy</p>
+    <a href="https://bangarangcrafts.co.za/">BangarangCrafts</a>
     <button id="startGameButton">Start Game</button>
-    <button id="bangarangButton">BangarangCrafts</button>
   `;
   
   // Pause the game loop initially
