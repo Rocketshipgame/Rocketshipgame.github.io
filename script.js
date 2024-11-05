@@ -302,6 +302,11 @@ function endGame() {
 
   displayHighScores();
 
+   // Show special popup if the score is 200 or more
+  if (score >= 200) {
+    showSpecialPopup();
+  }
+  
   const restartButton = document.createElement('button');
   restartButton.id = 'restartBtn';
   restartButton.innerText = 'Restart Game';
@@ -319,6 +324,29 @@ function endGame() {
   });
 
   gameOverDisplay.appendChild(restartButton);
+}
+
+function showSpecialPopup() {
+  const popup = document.createElement('div');
+  popup.id = 'specialPopup';
+  popup.innerHTML = `
+    <div style="position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); background-color: rgba(0, 0, 0, 0.85); color: white; padding: 20px; border-radius: 10px; z-index: 1000; text-align: center; max-width: 300px;">
+      <p>Congratulations! You have won! Use promo code <strong>BANG!</strong> at checkout to get 10% off.</p>
+      <button id="visitStoreButton" style="margin-top: 10px; padding: 10px; font-size: 1em; background-color: #28a745; border: none; color: white; border-radius: 5px; cursor: pointer;">BangarangCrafts.co.za</button>
+      <button id="closePopupButton" style="margin-top: 10px; padding: 10px; font-size: 1em; background-color: #ff5733; border: none; color: white; border-radius: 5px; cursor: pointer;">Exit</button>
+    </div>
+  `;
+  document.body.appendChild(popup);
+
+  // Add event listener for the "Visit Store" button to open the link
+  document.getElementById('visitStoreButton').addEventListener('click', () => {
+    window.open('https://bangarangcrafts.co.za', '_blank');
+  });
+
+  // Add event listener for the "Exit" button to close the popup
+  document.getElementById('closePopupButton').addEventListener('click', () => {
+    popup.remove();
+  });
 }
 
 function displayHighScores() {
