@@ -34,25 +34,38 @@ function addMobileControls() {
   // Add a class to the body or game container when mobile controls are added
   document.body.classList.add('mobile-controls-active');
   
-  // Create left button (transparent, no text)
+   // Create left button
   const leftButton = document.createElement('button');
   leftButton.style.width = '80px';
   leftButton.style.height = '80px';
-  leftButton.addEventListener('touchstart', () => (keys.ArrowLeft = true));
-  leftButton.addEventListener('touchend', () => (keys.ArrowLeft = false));
+  leftButton.addEventListener('touchstart', (event) => {
+    event.preventDefault();           // Prevents default behavior
+    keys.ArrowLeft = true;
+  });
+  leftButton.addEventListener('touchend', () => {
+    keys.ArrowLeft = false;
+  });
 
-  // Create right button (transparent, no text)
+  // Create right button
   const rightButton = document.createElement('button');
   rightButton.style.width = '80px';
   rightButton.style.height = '80px';
-  rightButton.addEventListener('touchstart', () => (keys.ArrowRight = true));
-  rightButton.addEventListener('touchend', () => (keys.ArrowRight = false));
+  rightButton.addEventListener('touchstart', (event) => {
+    event.preventDefault();           // Prevents default behavior
+    keys.ArrowRight = true;
+  });
+  rightButton.addEventListener('touchend', () => {
+    keys.ArrowRight = false;
+  });
 
-  // Create shoot button (transparent, no text)
+  // Create shoot button
   const shootButton = document.createElement('button');
   shootButton.style.width = '80px';
   shootButton.style.height = '80px';
-  shootButton.addEventListener('touchstart', () => (keys.Space = true));
+  shootButton.addEventListener('touchstart', (event) => {
+    event.preventDefault();           // Prevents default behavior
+    keys.Space = true;
+  });
 
   // Append buttons to controls container
   controlsContainer.appendChild(leftButton);
