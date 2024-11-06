@@ -148,6 +148,8 @@ body {
   justify-content: center;
   gap: 10px;
   z-index: 10;
+  touch-action: manipulation;  /* Prevents zoom on touch */
+  -webkit-touch-callout: none; /* Disables callout on long press */
 }
 
 /* Transparent buttons without text */
