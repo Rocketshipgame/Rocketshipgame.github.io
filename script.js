@@ -315,8 +315,8 @@ function endGame() {
 
   displayHighScores();
 
-   // Show special popup if the score is 200 or more
-  if (score >= 200) {
+   // Show special popup if the score is 100 or more
+  if (score >= 100) {
     showSpecialPopup();
   }
   
@@ -392,8 +392,7 @@ window.addEventListener('load', () => {
   document.getElementById('gameOver').style.display = 'block';
   document.getElementById('gameOver').innerHTML = `
     <H1>Rocket Ship</H1>
-    <p>Created By</p>
-    <a href="https://bangarangcrafts.co.za/">BangarangCrafts</a>
+    <p>Created By Bangarangcrafts</p>
     <button id="startGameButton">Start Game</button>
   `;
   
