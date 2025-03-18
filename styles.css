@@ -249,3 +249,33 @@ body {
 #closePopupButton:hover {
   background-color: #ff2e00;
 }
+
+@keyframes explosion {
+  0% {
+    transform: scale(1);
+    opacity: 1;
+  }
+  100% {
+    transform: scale(3);
+    opacity: 0;
+  }
+}
+
+.explosion {
+  position: absolute;
+  width: 20px;
+  height: 20px;
+  background: radial-gradient(circle, orange, red);
+  border-radius: 50%;
+  animation: explosion 0.5s ease-out forwards;
+  z-index: 10;
+}
+
+.bullet.blue-orb {
+  width: 20px; /* Increase size for orbs */
+  height: 20px; /* Increase size for orbs */
+  background: radial-gradient(circle, #00aaff, #0077ff); /* Blue gradient */
+  border-radius: 50%; /* Make it circular */
+  box-shadow: 0 0 10px #00aaff; /* Add a glowing effect */
+  z-index: 5; /* Ensure bullets appear above stars */
+}
