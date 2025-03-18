@@ -244,6 +244,8 @@ function update() {
         bullet.y < asteroid.y + 50 &&
         bullet.y + 10 > asteroid.y
       ) {
+	// Explosion effect at the asteroid's position
+        createExplosion(asteroid.x + 25, asteroid.y + 25); // Adjust coordinates as necessary     
         // Remove asteroid and bullet
         asteroid.remove();
         asteroids.splice(i, 1);
