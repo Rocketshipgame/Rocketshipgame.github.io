@@ -25,7 +25,313 @@ const keys = {
   Space: false,
 };
 
-// Power-Up Class
+// Detect mobile devices
+function isMobile() {
+  return /Mobi|Android/i.test(navigator.userAgent);
+}
+
+function addMobileControls() {
+  const controlsContainer = document.createElement('div');
+  controlsContainer.id = 'mobileControls';
+
+  // Add a class to the body or game container when mobile controls are added
+  document.body.classList.add('mobile-controls-active');
+  
+  // Create left button (transparent, no text)
+  const leftButton = document.createElement('button');
+  leftButton.style.width = '80px';
+  leftButton.style.height = '80px';
+  leftButton.addEventListener('touchstart', () => (keys.ArrowLeft = true));
+  leftButton.addEventListener('touchend', () => (keys.ArrowLeft = false));
+
+  // Create right button (transparent, no text)
+  const rightButton = document.createElement('button');
+  rightButton.style.width = '80px';
+  rightButton.style.height = '80px';
+  rightButton.addEventListener('touchstart', () => (keys.ArrowRight = true));
+  rightButton.addEventListener('touchend', () => (keys.ArrowRight = false));
+
+  // Create shoot button (transparent, no text)
+  const shootButton = document.createElement('button');
+  shootButton.style.width = '80px';
+  shootButton.style.height = '80px';
+  shootButton.addEventListener('touchstart', () => (keys.Space = true));
+
+  // Append buttons to controls container
+  controlsContainer.appendChild(leftButton);
+  controlsContainer.appendChild(rightButton);
+  controlsContainer.appendChild(shootButton);
+
+  // Append the controls container to the body
+  document.body.appendChild(controlsContainer);
+}
+
+// Retrieve high scores from localStorage
+let highScores = JSON.parse(localStorage.getItem('highScores')) || [];
+
+window.addEventListener('resize', () => {
+  rocketX = window.innerWidth / 2 - 20;
+});
+
+document.addEventListener('keydown', (e) => {
+  if (e.code in keys) keys[e.code] = true;
+});
+
+document.addEventListener('keyup', (e) => {
+  if (e.code in keys) keys[e.code] = false;
+});
+
+restartBtn.addEventListener('click', () => {
+  location.reload();
+});
+
+// Event listeners for keyboard input
+document.addEventListener('keydown', (e) => {
+  if (e.code in keys) keys[e.code] = true;
+});
+
+document.addEventListener('keyup', (e) => {
+  if (e.code in keys) keys[e.code] = false;
+});
+
+// Restart game button
+restartBtn.addEventListener('click', () => {
+  location.reload();
+});
+
+// Game loop
+function gameLoop() {
+  update();
+  if (gameActive) requestAnimationFrame(gameLoop);
+}
+
+// Start the game loop
+gameLoop();
+
+function update() {
+  if (!gameActive) return;
+
+  // Rocket movement
+  if (keys.ArrowLeft && rocketX > 0) rocketX -= 5;
+  if (keys.ArrowRight && rocketX < window.innerWidth - 40) rocketX += 5;
+  rocket.style.left = `${rocketX}px`;
+
+  // Shooting
+  if (keys.Space) {
+    if (isMultiShotActive) {
+      // Shoot 3 bullets in a spread pattern
+      bullets.push(new Bullet(rocketX + 10, rocketY - 10));
+      bullets.push(new Bullet(rocketX + 20, rocketY - 10));
+      bullets.push(new Bullet(rocketX + 30, rocketY - 10));
+    } else {
+      // Shoot a single bullet
+      bullets.push(new Bullet(rocketX + 20, rocketY - 10));
+    }
+    keys.Space = false;
+  }
+
+  // Update bullets
+  updateBullets();
+
+  // Spawn asteroids
+  if (Math.random() < asteroidSpawnRate) {
+    const x = Math.random() * (window.innerWidth - 50);
+    const speed = (2 + Math.random() * 2) * asteroidSpeedMultiplier;
+    asteroids.push(new Asteroid(x, speed));
+  }
+
+  // Spawn power-ups
+  if (Math.random() < powerUpSpawnRate) {
+    const x = Math.random() * (window.innerWidth - 30);
+    powerUps.push(new PowerUp(x, 'multiShot'));
+  }
+
+  // Update asteroids
+  updateAsteroids();
+
+  // Update power-ups
+  updatePowerUps();
+
+  // Update stars
+  stars.forEach((star) => star.update());
+}
+
+class Bullet {
+  constructor(x, y, vx = 0, vy = -5) {
+    this.x = x;
+    this.y = y;
+    this.vx = vx; // Horizontal velocity
+    this.vy = vy; // Vertical velocity
+    this.element = document.createElement('div');
+    this.element.className = 'bullet';
+    this.element.style.left = `${x}px`;
+    this.element.style.top = `${y}px`;
+    gameContainer.appendChild(this.element);
+  }
+
+  update() {
+    this.x += this.vx;
+    this.y += this.vy;
+    this.element.style.left = `${this.x}px`;
+    this.element.style.top = `${this.y}px`;
+
+    // Remove the bullet if it goes off the screen
+    if (
+      this.x < 0 || this.x > window.innerWidth ||
+      this.y < 0 || this.y > window.innerHeight
+    ) {
+      this.remove();
+      const index = bullets.indexOf(this);
+      if (index !== -1) {
+        bullets.splice(index, 1); // Remove the bullet from the array
+      }
+    }
+  }
+
+  remove() {
+    this.element.remove();
+  }
+}
+
+function updateBullets() {
+  for (let i = bullets.length - 1; i >= 0; i--) {
+    const bullet = bullets[i];
+    bullet.update();
+
+    // Check for collision with power-ups
+    for (let j = powerUps.length - 1; j >= 0; j--) {
+      const powerUp = powerUps[j];
+      if (
+        bullet.x < powerUp.x + 30 &&
+        bullet.x + 5 > powerUp.x &&
+        bullet.y < powerUp.y + 30 &&
+        bullet.y + 10 > powerUp.y
+      ) {
+        // Remove the bullet and power-up
+        bullet.remove();
+        bullets.splice(i, 1);
+        powerUp.remove();
+        powerUps.splice(j, 1);
+
+        // Create explosion effect
+        createExplosion(powerUp.x, powerUp.y);
+
+        // Create 4 new exploding bullets
+        createExplodingBullets(powerUp.x, powerUp.y);
+        break;
+      }
+    }
+  }
+}
+
+function createExplodingBullets(x, y) {
+  // Define the four corners of the screen
+  const corners = [
+    { x: 0, y: 0 }, // Top-left
+    { x: window.innerWidth, y: 0 }, // Top-right
+    { x: 0, y: window.innerHeight }, // Bottom-left
+    { x: window.innerWidth, y: window.innerHeight } // Bottom-right
+  ];
+
+  // Create a bullet for each corner
+  corners.forEach(corner => {
+    const dx = corner.x - x; // Horizontal distance to corner
+    const dy = corner.y - y; // Vertical distance to corner
+    const angle = Math.atan2(dy, dx); // Calculate the angle to the corner
+
+    // Calculate velocity toward the corner
+    const speed = 5; // Adjust speed as needed
+    const vx = Math.cos(angle) * speed;
+    const vy = Math.sin(angle) * speed;
+
+    // Create an exploding bullet
+    const bullet = new Bullet(x, y, vx, vy);
+    bullet.element.classList.add('blue-orb'); // Add blue-orb class
+    bullets.push(bullet);
+  });
+}
+
+class Asteroid {
+  constructor(x, speed) {
+    this.x = x;
+    this.y = 0;
+    this.speed = speed;
+    this.rotationSpeed = (Math.random() * 6) - 3;
+    this.currentRotation = 0;
+
+    this.element = document.createElement('div');
+    this.element.className = 'asteroid';
+    this.element.style.left = `${x}px`;
+    this.element.style.top = `${this.y}px`;
+    gameContainer.appendChild(this.element);
+  }
+
+  update() {
+    this.y += this.speed;
+    this.element.style.top = `${this.y}px`;
+    this.currentRotation += this.rotationSpeed;
+    this.element.style.transform = `rotate(${this.currentRotation}deg)`;
+  }
+
+  remove() {
+    this.element.remove();
+  }
+}
+
+function updateAsteroids() {
+  for (let i = asteroids.length - 1; i >= 0; i--) {
+    const asteroid = asteroids[i];
+    asteroid.update();
+
+    // Check if asteroid goes off the screen
+    if (asteroid.y > window.innerHeight) {
+      asteroid.remove();
+      asteroids.splice(i, 1);
+      continue;
+    }
+
+    // Check for collision with bullets
+    for (let j = bullets.length - 1; j >= 0; j--) {
+      const bullet = bullets[j];
+      if (
+        bullet.x < asteroid.x + 50 &&
+        bullet.x + 5 > asteroid.x &&
+        bullet.y < asteroid.y + 50 &&
+        bullet.y + 10 > asteroid.y
+      ) {
+        // Remove asteroid and bullet
+        asteroid.remove();
+        asteroids.splice(i, 1);
+        bullet.remove();
+        bullets.splice(j, 1);
+
+        // Create explosion effect
+        createExplosion(asteroid.x, asteroid.y);
+
+        // Increase score and difficulty
+        score++;
+        scoreDisplay.innerHTML = `Score: ${score}`;
+        increaseDifficulty();
+        break;
+      }
+    }
+
+    // Check for collision with rocket
+    if (
+      rocketX < asteroid.x + 50 &&
+      rocketX + 40 > asteroid.x &&
+      rocketY < asteroid.y + 50 &&
+      rocketY + 80 > asteroid.y
+    ) {
+      // Create explosion effect
+      createExplosion(asteroid.x, asteroid.y);
+
+      endGame(); // End the game if the rocket collides with an asteroid
+      break;
+    }
+  }
+}
+
 class PowerUp {
   constructor(x, type) {
     this.x = x;
@@ -48,7 +354,145 @@ class PowerUp {
   }
 }
 
-// Detect mobile devices
+function updatePowerUps() {
+  for (let i = powerUps.length - 1; i >= 0; i--) {
+    const powerUp = powerUps[i];
+    powerUp.update();
+
+    // Check for collision with rocket
+    if (
+      rocketX < powerUp.x + 30 &&
+      rocketX + 40 > powerUp.x &&
+      rocketY < powerUp.y + 30 &&
+      rocketY + 60 > powerUp.y
+    ) {
+      if (powerUp.type === 'multiShot') {
+        activateMultiShot();
+      }
+      powerUp.remove();
+      powerUps.splice(i, 1);
+    }
+
+    // Remove power-up if it goes off the screen
+    if (powerUp.y > window.innerHeight) {
+      powerUp.remove();
+      powerUps.splice(i, 1);
+    }
+  }
+}
+
+function activateMultiShot() {
+  isMultiShotActive = true;
+  setTimeout(() => {
+    isMultiShotActive = false; // Deactivate after 10 seconds
+  }, 10000);
+}
+
+class Star {
+  constructor(x, y, speed) {
+    this.x = x;
+    this.y = y;
+    this.speed = speed;
+    this.element = document.createElement('div');
+    this.element.className = 'star';
+    this.element.style.left = `${x}px`;
+    this.element.style.top = `${y}px`;
+    gameContainer.appendChild(this.element);
+  }
+
+  update() {
+    this.y += this.speed;
+    this.element.style.top = `${this.y}px`;
+    if (this.y > window.innerHeight) {
+      this.y = 0;
+    }
+  }
+}
+
+function createStars() {
+  for (let i = 0; i < 100; i++) {
+    const x = Math.random() * window.innerWidth;
+    const y = Math.random() * window.innerHeight;
+    const speed = 1 + Math.random();
+    stars.push(new Star(x, y, speed));
+  }
+}
+
+// Create stars for the background
+createStars();
+
+function endGame() {
+  gameActive = false;
+  gameOverDisplay.style.display = 'block';
+
+  let playerName = prompt("Game Over! Enter your name:");
+  if (playerName) {
+    highScores.push({ name: playerName, score: score });
+    highScores.sort((a, b) => b.score - a.score); // Sort scores in descending order
+    highScores = highScores.slice(0, 10); // Keep only top 10 scores
+    localStorage.setItem('highScores', JSON.stringify(highScores));
+  }
+
+  displayHighScores();
+
+  // Show special popup if the score is 100 or more
+  if (score >= 100) {
+    showSpecialPopup();
+  }
+}
+
+function showSpecialPopup() {
+  const popup = document.createElement('div');
+  popup.id = 'specialPopup';
+  popup.innerHTML = `
+    <div style="position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); background-color: rgba(0, 0, 0, 0.85); color: white; padding: 20px; border-radius: 10px; z-index: 1000; text-align: center; max-width: 300px;">
+      <p>Congratulations! You have won! Use promo code <strong>BANG!</strong> at checkout to get 10% off.</p>
+      <button id="visitStoreButton" style="margin-top: 10px; padding: 10px; font-size: 1em; background-color: #28a745; border: none; color: white; border-radius: 5px; cursor: pointer;">BangarangCrafts.co.za</button>
+      <button id="closePopupButton" style="margin-top: 10px; padding: 10px; font-size: 1em; background-color: #ff5733; border: none; color: white; border-radius: 5px; cursor: pointer;">Exit</button>
+    </div>
+  `;
+  document.body.appendChild(popup);
+
+  // Add event listener for the "Visit Store" button to open the link
+  document.getElementById('visitStoreButton').addEventListener('click', () => {
+    window.open('https://bangarangcrafts.co.za', '_blank');
+  });
+
+  // Add event listener for the "Exit" button to close the popup
+  document.getElementById('closePopupButton').addEventListener('click', () => {
+    popup.remove();
+  });
+}
+
+function displayHighScores() {
+  let highScoreHTML = '<h2>Top 10 Scores</h2><ul>';
+  highScores.forEach((scoreEntry) => {
+    highScoreHTML += `<li>${scoreEntry.name}: ${scoreEntry.score}</li>`;
+  });
+  highScoreHTML += '</ul>';
+  gameOverDisplay.innerHTML = `<p>Game Over</p>${highScoreHTML}`;
+}
+
+function createExplosion(x, y) {
+  const explosion = document.createElement('div');
+  explosion.className = 'explosion';
+  explosion.style.left = `${x}px`;
+  explosion.style.top = `${y}px`;
+  gameContainer.appendChild(explosion);
+
+  // Remove the explosion after the animation ends
+  setTimeout(() => {
+    explosion.remove();
+  }, 500); // Match the duration of the CSS animation
+}
+
+function increaseDifficulty() {
+  if (score % 10 === 0 && score > 0) {
+    asteroidSpawnRate += 0.01;
+    asteroidSpeedMultiplier += 0.2;
+  }
+}
+
 function isMobile() {
   return /Mobi|Android/i.test(navigator.userAgent);
 }
@@ -80,267 +524,6 @@ function addMobileControls() {
   controlsContainer.appendChild(rightButton);
   controlsContainer.appendChild(shootButton);
   document.body.appendChild(controlsContainer);
-}
-
-// Retrieve high scores from localStorage
-let highScores = JSON.parse(localStorage.getItem('highScores')) || [];
-
-window.addEventListener('resize', () => {
-  rocketX = window.innerWidth / 2 - 20;
-});
-
-document.addEventListener('keydown', (e) => {
-  if (e.code in keys) keys[e.code] = true;
-});
-
-document.addEventListener('keyup', (e) => {
-  if (e.code in keys) keys[e.code] = false;
-});
-
-restartBtn.addEventListener('click', () => {
-  location.reload();
-});
-
-class Bullet {
-  constructor(x, y) {
-    this.x = x;
-    this.y = y;
-    this.element = document.createElement('div');
-    this.element.className = 'bullet';
-    this.element.style.left = `${x}px`;
-    this.element.style.top = `${y}px`;
-    gameContainer.appendChild(this.element);
-  }
-
-  update() {
-    this.y -= 5;
-    this.element.style.top = `${this.y}px`;
-  }
-
-  remove() {
-    this.element.remove();
-  }
-}
-
-class Asteroid {
-  constructor(x, speed) {
-    this.x = x;
-    this.y = 0;
-    this.speed = speed;
-    this.rotationSpeed = (Math.random() * 6) - 3;
-    this.currentRotation = 0;
-
-    this.element = document.createElement('div');
-    this.element.className = 'asteroid';
-    this.element.style.left = `${x}px`;
-    this.element.style.top = `${this.y}px`;
-    gameContainer.appendChild(this.element);
-  }
-
-  update() {
-    this.y += this.speed;
-    this.element.style.top = `${this.y}px`;
-    this.currentRotation += this.rotationSpeed;
-    this.element.style.transform = `rotate(${this.currentRotation}deg)`;
-  }
-
-  remove() {
-    this.element.remove();
-  }
-}
-
-class Star {
-  constructor(x, y, speed) {
-    this.x = x;
-    this.y = y;
-    this.speed = speed;
-    this.element = document.createElement('div');
-    this.element.className = 'star';
-    this.element.style.left = `${x}px`;
-    this.element.style.top = `${y}px`;
-    gameContainer.appendChild(this.element);
-  }
-
-  update() {
-    this.y += this.speed;
-    this.element.style.top = `${this.y}px`;
-    if (this.y > window.innerHeight) {
-      this.y = 0;
-    }
-  }
-}
-
-function increaseDifficulty() {
-  if (score % 10 === 0 && score > 0) {
-    asteroidSpawnRate += 0.01;
-    asteroidSpeedMultiplier += 0.2;
-  }
-}
-
-function activateMultiShot() {
-  isMultiShotActive = true;
-  setTimeout(() => {
-    isMultiShotActive = false; // Deactivate after 10 seconds
-  }, 10000);
-}
-
-function update() {
-  if (!gameActive) return;
-
-  // Rocket movement
-  if (keys.ArrowLeft && rocketX > 0) rocketX -= 5;
-  if (keys.ArrowRight && rocketX < window.innerWidth - 40) rocketX += 5;
-  rocket.style.left = `${rocketX}px`;
-
-  // Shooting
-  if (keys.Space) {
-    if (isMultiShotActive) {
-      // Shoot 3 bullets in a spread pattern
-      bullets.push(new Bullet(rocketX + 10, rocketY - 10));
-      bullets.push(new Bullet(rocketX + 20, rocketY - 10));
-      bullets.push(new Bullet(rocketX + 30, rocketY - 10));
-    } else {
-      // Shoot a single bullet
-      bullets.push(new Bullet(rocketX + 20, rocketY - 10));
-    }
-    keys.Space = false;
-  }
-
-  // Update bullets
-  for (let i = bullets.length - 1; i >= 0; i--) {
-    const bullet = bullets[i];
-    bullet.update();
-    if (bullet.y < 0) {
-      bullet.remove();
-      bullets.splice(i, 1);
-    }
-  }
-
-  // Spawn asteroids
-  if (Math.random() < asteroidSpawnRate) {
-    const x = Math.random() * (window.innerWidth - 50);
-    const speed = (2 + Math.random() * 2) * asteroidSpeedMultiplier;
-    asteroids.push(new Asteroid(x, speed));
-  }
-
-  // Update asteroids
-  for (let i = asteroids.length - 1; i >= 0; i--) {
-    const asteroid = asteroids[i];
-    asteroid.update();
-
-    // Check if asteroid goes off the screen
-    if (asteroid.y > window.innerHeight) {
-      asteroid.remove();
-      asteroids.splice(i, 1);
-      continue;
-    }
-
-    // Check for collision with bullets
-    for (let j = bullets.length - 1; j >= 0; j--) {
-      const bullet = bullets[j];
-      if (
-        bullet.x < asteroid.x + 50 &&
-        bullet.x + 5 > asteroid.x &&
-        bullet.y < asteroid.y + 50 &&
-        bullet.y + 10 > asteroid.y
-      ) {
-	// Explosion effect at the asteroid's position
-        createExplosion(asteroid.x + 25, asteroid.y + 25); // Adjust coordinates as necessary     
-        // Remove asteroid and bullet
-        asteroid.remove();
-        asteroids.splice(i, 1);
-        bullet.remove();
-        bullets.splice(j, 1);
-
-        // Increase score and difficulty
-        score++;
-        scoreDisplay.innerHTML = `Score: ${score}`;
-        increaseDifficulty();
-        break;
-      }
-    }
-
-    // Check for collision with rocket
-    if (
-      rocketX < asteroid.x + 50 &&
-      rocketX + 40 > asteroid.x &&
-      rocketY < asteroid.y + 50 &&
-      rocketY + 80 > asteroid.y
-    ) {
-      endGame(); // End the game if the rocket collides with an asteroid
-      break;
-    }
-  }
-
-  // Spawn power-ups
-  if (Math.random() < powerUpSpawnRate) {
-    const x = Math.random() * (window.innerWidth - 30);
-    powerUps.push(new PowerUp(x, 'multiShot'));
-    console.log("Power-up spawned at:", x); // Debugging log
-  }
-
-  // Update power-ups
-  for (let i = powerUps.length - 1; i >= 0; i--) {
-    const powerUp = powerUps[i];
-    powerUp.update();
-
-    // Check for collision with rocket
-    if (
-      rocketX < powerUp.x + 30 &&
-      rocketX + 40 > powerUp.x &&
-      rocketY < powerUp.y + 30 &&
-      rocketY + 60 > powerUp.y
-    ) {
-      console.log("Power-up collected!"); // Debugging log
-      if (powerUp.type === 'multiShot') {
-        activateMultiShot();
-      }
-      powerUp.remove();
-      powerUps.splice(i, 1);
-    }
-
-    // Remove power-up if it goes off the screen
-    if (powerUp.y > window.innerHeight) {
-      console.log("Power-up missed!"); // Debugging log
-      powerUp.remove();
-      powerUps.splice(i, 1);
-    }
-  }
-
-  // Update stars
-  stars.forEach((star) => star.update());
-}
-
-function createExplosion(x, y) {
-  const corners = [
-    { x: 0, y: 0 },
-    { x: window.innerWidth, y: 0 },
-    { x: 0, y: window.innerHeight },
-    { x: window.innerWidth, y: window.innerHeight }
-  ];
-
-  corners.forEach((corner) => {
-    const dot = document.createElement('div');
-    dot.className = 'explosion-dot';
-    dot.style.left = `${x}px`;
-    dot.style.top = `${y}px`;
-    dot.style.transition = 'left 1s linear, top 1s linear';
-    setTimeout(() => {
-      dot.style.left = `${corner.x}px`;
-      dot.style.top = `${corner.y}px`;
-    }, 10);
-    gameContainer.appendChild(dot);
-    setTimeout(() => dot.remove(), 1000);
-  });
-}
-
-function createStars() {
-  for (let i = 0; i < 100; i++) {
-    const x = Math.random() * window.innerWidth;
-    const y = Math.random() * window.innerHeight;
-    const speed = 1 + Math.random();
-    stars.push(new Star(x, y, speed));
-  }
 }
 
 function endGame() {
@@ -404,13 +587,9 @@ function showSpecialPopup() {
   });
 }
 
-function displayHighScores() {
-  let highScoreHTML = '<h2>Top 10 Scores</h2><ul>';
-  highScores.forEach((scoreEntry) => {
-    highScoreHTML += `<li>${scoreEntry.name}: ${scoreEntry.score}</li>`;
-  });
-  highScoreHTML += '</ul>';
-  gameOverDisplay.innerHTML = `<p>Game Over</p>${highScoreHTML}`;
+// If the user is on a mobile device, add the touch controls
+if (isMobile()) {
+  addMobileControls();
 }
 
 function gameLoop() {
@@ -435,7 +614,7 @@ window.addEventListener('load', () => {
   document.getElementById('gameOver').innerHTML = `
     <H1>Rocket Ship</H1>
     <p>Created By</p>
-	<p>BangarangCrafts</p>
+    <p>BangarangCrafts</p>  
     <button id="startGameButton">Start Game</button>
   `;
   
