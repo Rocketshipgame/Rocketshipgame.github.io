@@ -28,8 +28,6 @@ body {
   position: relative;
 }
 
-
-
 #rocket {
   position: absolute;
   bottom: 55px;
@@ -40,13 +38,38 @@ body {
   z-index: 5;
 }
 
-
 /* CSS Bullet */
 .bullet {
   position: absolute;
   width: 5px;
   height: 10px;
-  background: red;
+  background: red; /* Default bullet color */
+}
+
+/* Blue bullets when multi-shot power-up is active */
+.bullet.blue {
+  background: blue;
+}
+
+/* Add this keyframe animation */
+@keyframes rotate {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* Apply the animation to the power-up */
+.power-up {
+  position: absolute;
+  width: 30px;
+  height: 30px;
+  background: url('orb.png') no-repeat center/contain;
+  z-index: 2;
+  transform-origin: center;
+  animation: rotate 2s linear infinite; /* Rotate continuously */
 }
 
 /* Enhanced Asteroid */
@@ -57,31 +80,6 @@ body {
   background: url('Asteroid.png') no-repeat center/contain;
   z-index: 3;
   transform-origin: center;  /* Ensures the asteroid rotates around its center */
-}
-
-/* Asteroid Craters */
-.asteroid::before,
-.asteroid::after {
-  content: '';
-  position: absolute;
-  background-color: rgba(0, 0, 0, 0.4);
-  border-radius: 50%;
-}
-
-.asteroid::before {
-  width: 12px;
-  height: 12px;
-  top: 15px;
-  left: 10px;
-  box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.5);
-}
-
-.asteroid::after {
-  width: 8px;
-  height: 8px;
-  bottom: 10px;
-  right: 15px;
-  box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.5);
 }
 
 /* Score Counter */
@@ -148,30 +146,28 @@ body {
   justify-content: center;
   gap: 10px;
   z-index: 10;
-  touch-action: manipulation;  /* Prevents zoom on touch */
-  -webkit-touch-callout: none; /* Disables callout on long press */
 }
 
 /* Transparent buttons without text */
 #mobileControls button {
-  width: 80px;              /* Set a fixed width */
-  height: 80px;             /* Set a fixed height */
-  background-color: rgba(255, 255, 255, 0.1); /* Make the button transparent */
+  width: 80px;
+  height: 80px;
+  background-color: rgba(255, 255, 255, 0.1);
   border: none;
-  border-radius: 50%;       /* Rounded buttons (optional) */
+  border-radius: 50%;
   cursor: pointer;
   transition: background-color 0.3s ease;
 }
 
 /* On button press (active) */
 #mobileControls button:active {
-  background-color: rgba(255, 255, 255, 0.3); /* Highlight when pressed */
-  transform: scale(0.95); /* Add a slight press effect */
+  background-color: rgba(255, 255, 255, 0.3);
+  transform: scale(0.95);
 }
 
 /* Remove text inside the buttons */
 #mobileControls button::before {
-  content: ""; /* No text */
+  content: "";
 }
 
 /* Adjust button size for smaller screens (optional) */
@@ -181,16 +177,7 @@ body {
     height: 60px;
   }
 }
-  #score {
-    font-size: 24px;
-    top: 5vw;
-  }
 
-  /* Adjust Game Over and controls for a better mobile fit */
-  #gameOver {
-    font-size: 30px;
-  }
-}
 .explosion-dot {
   position: absolute;
   width: 5px;
@@ -208,6 +195,7 @@ body {
     opacity: 0;
   }
 }
+
 #startGameButton {
   padding: 10px 20px;
   font-size: 1.2em;
@@ -261,4 +249,3 @@ body {
 #closePopupButton:hover {
   background-color: #ff2e00;
 }
-
