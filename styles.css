@@ -279,3 +279,21 @@ body {
   box-shadow: 0 0 10px #00aaff; /* Add a glowing effect */
   z-index: 5; /* Ensure bullets appear above stars */
 }
+
+/* Prevent zooming on double-tap */
+#mobileControls button {
+  touch-action: manipulation; /* Disable double-tap zoom */
+}
+
+/* Prevent text selection on buttons */
+#mobileControls button {
+  user-select: none; /* Prevent text selection */
+  -webkit-user-select: none; /* Safari */
+  -moz-user-select: none; /* Firefox */
+  -ms-user-select: none; /* IE/Edge */
+}
+
+#mobileControls button:active {
+  background-color: rgba(255, 255, 255, 0.3); /* Change color when pressed */
+  transform: scale(0.95); /* Slightly shrink the button */
+}
