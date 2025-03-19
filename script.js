@@ -19,11 +19,70 @@ let asteroidSpeedMultiplier = 1;
 let powerUpSpawnRate = 0.005; // Power-ups spawn less frequently
 let isMultiShotActive = false; // Track if multi-shot is active
 
+let lastFrameTime = performance.now();
+let frameCount = 0;
+let currentFPS = 60; // Assume 60 FPS initially
+const fpsThreshold = 30; // Show popup if FPS drops below this value
+
 const keys = {
   ArrowLeft: false,
   ArrowRight: false,
   Space: false,
 };
+
+function measureFPS() {
+  const now = performance.now();
+  const delta = now - lastFrameTime;
+
+  frameCount++;
+  if (delta >= 1000) { // Calculate FPS every second
+    currentFPS = (frameCount * 1000) / delta;
+    frameCount = 0;
+    lastFrameTime = now;
+
+    // Check if FPS is below the threshold
+    if (currentFPS < fpsThreshold && gameActive) {
+      showLowFPSPopup();
+    }
+  }
+}
+
+function showLowFPSPopup() {
+  const popup = document.createElement('div');
+  popup.id = 'lowFpsPopup';
+  popup.innerHTML = `
+    <div style="position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); background-color: rgba(0, 0, 0, 0.85); color: white; padding: 20px; border-radius: 10px; z-index: 1000; text-align: center; max-width: 300px;">
+      <p>The game is running slowly on your device. Would you like to switch to a more basic version for better performance?</p>
+      <button id="switchToBasicButton" style="margin-top: 10px; padding: 10px; font-size: 1em; background-color: #28a745; border: none; color: white; border-radius: 5px; cursor: pointer;">Switch to Basic Version</button>
+      <button id="closePopupButton" style="margin-top: 10px; padding: 10px; font-size: 1em; background-color: #ff5733; border: none; color: white; border-radius: 5px; cursor: pointer;">Continue Anyway</button>
+    </div>
+  `;
+  document.body.appendChild(popup);
+
+  // Add event listener for the "Switch to Basic Version" button
+  document.getElementById('switchToBasicButton').addEventListener('click', () => {
+    switchToBasicVersion();
+    popup.remove();
+  });
+
+  // Add event listener for the "Continue Anyway" button
+  document.getElementById('closePopupButton').addEventListener('click', () => {
+    popup.remove();
+  });
+}
+
+function switchToBasicVersion() {
+  // Stop the current game loop
+  gameActive = false;
+
+  // Remove all game elements
+  gameContainer.innerHTML = '';
+
+  // Load the basic version of the game
+  const script = document.createElement('script');
+  script.src = 'basic-version.js'; // Replace with the path to your basic version
+  document.body.appendChild(script);
+}
 
 // Detect mobile devices
 function isMobile() {
@@ -110,6 +169,7 @@ restartBtn.addEventListener('click', () => {
 // Game loop
 function gameLoop() {
   update();
+  measureFPS(); // Measure FPS every frame
   if (gameActive) requestAnimationFrame(gameLoop);
 }
 
