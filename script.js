@@ -34,35 +34,43 @@ function addMobileControls() {
   const controlsContainer = document.createElement('div');
   controlsContainer.id = 'mobileControls';
 
-  // Add a class to the body or game container when mobile controls are added
   document.body.classList.add('mobile-controls-active');
-  
-  // Create left button (transparent, no text)
+
   const leftButton = document.createElement('button');
   leftButton.style.width = '80px';
   leftButton.style.height = '80px';
-  leftButton.addEventListener('touchstart', () => (keys.ArrowLeft = true));
-  leftButton.addEventListener('touchend', () => (keys.ArrowLeft = false));
+  leftButton.addEventListener('touchstart', (e) => {
+    e.preventDefault(); // Prevent default touch behavior
+    keys.ArrowLeft = true;
+  });
+  leftButton.addEventListener('touchend', (e) => {
+    e.preventDefault(); // Prevent default touch behavior
+    keys.ArrowLeft = false;
+  });
 
-  // Create right button (transparent, no text)
   const rightButton = document.createElement('button');
   rightButton.style.width = '80px';
   rightButton.style.height = '80px';
-  rightButton.addEventListener('touchstart', () => (keys.ArrowRight = true));
-  rightButton.addEventListener('touchend', () => (keys.ArrowRight = false));
+  rightButton.addEventListener('touchstart', (e) => {
+    e.preventDefault(); // Prevent default touch behavior
+    keys.ArrowRight = true;
+  });
+  rightButton.addEventListener('touchend', (e) => {
+    e.preventDefault(); // Prevent default touch behavior
+    keys.ArrowRight = false;
+  });
 
-  // Create shoot button (transparent, no text)
   const shootButton = document.createElement('button');
   shootButton.style.width = '80px';
   shootButton.style.height = '80px';
-  shootButton.addEventListener('touchstart', () => (keys.Space = true));
+  shootButton.addEventListener('touchstart', (e) => {
+    e.preventDefault(); // Prevent default touch behavior
+    keys.Space = true;
+  });
 
-  // Append buttons to controls container
   controlsContainer.appendChild(leftButton);
   controlsContainer.appendChild(rightButton);
   controlsContainer.appendChild(shootButton);
-
-  // Append the controls container to the body
   document.body.appendChild(controlsContainer);
 }
 
@@ -493,38 +501,7 @@ function increaseDifficulty() {
   }
 }
 
-function isMobile() {
-  return /Mobi|Android/i.test(navigator.userAgent);
-}
 
-function addMobileControls() {
-  const controlsContainer = document.createElement('div');
-  controlsContainer.id = 'mobileControls';
-
-  document.body.classList.add('mobile-controls-active');
-
-  const leftButton = document.createElement('button');
-  leftButton.style.width = '80px';
-  leftButton.style.height = '80px';
-  leftButton.addEventListener('touchstart', () => (keys.ArrowLeft = true));
-  leftButton.addEventListener('touchend', () => (keys.ArrowLeft = false));
-
-  const rightButton = document.createElement('button');
-  rightButton.style.width = '80px';
-  rightButton.style.height = '80px';
-  rightButton.addEventListener('touchstart', () => (keys.ArrowRight = true));
-  rightButton.addEventListener('touchend', () => (keys.ArrowRight = false));
-
-  const shootButton = document.createElement('button');
-  shootButton.style.width = '80px';
-  shootButton.style.height = '80px';
-  shootButton.addEventListener('touchstart', () => (keys.Space = true));
-
-  controlsContainer.appendChild(leftButton);
-  controlsContainer.appendChild(rightButton);
-  controlsContainer.appendChild(shootButton);
-  document.body.appendChild(controlsContainer);
-}
 
 function endGame() {
   gameActive = false;
