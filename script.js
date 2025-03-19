@@ -22,7 +22,7 @@ let isMultiShotActive = false; // Track if multi-shot is active
 let lastFrameTime = performance.now(); // Initialize with the current time
 let frameCount = 0; // Initialize frame count to 0
 let currentFPS = 60; // Assume 60 FPS initially
-const fpsThreshold = 5; // Show popup if FPS drops below this value
+const fpsThreshold = 8; // Show popup if FPS drops below this value
 
 const keys = {
   ArrowLeft: false,
