@@ -19,10 +19,10 @@ let asteroidSpeedMultiplier = 1;
 let powerUpSpawnRate = 0.005; // Power-ups spawn less frequently
 let isMultiShotActive = false; // Track if multi-shot is active
 
-let lastFrameTime = performance.now();
-let frameCount = 0;
+let lastFrameTime = performance.now(); // Initialize with the current time
+let frameCount = 0; // Initialize frame count to 0
 let currentFPS = 60; // Assume 60 FPS initially
-const fpsThreshold = 30; // Show popup if FPS drops below this value
+const fpsThreshold = 5; // Show popup if FPS drops below this value
 
 const keys = {
   ArrowLeft: false,
@@ -30,24 +30,47 @@ const keys = {
   Space: false,
 };
 
+let fpsSamples = []; // Array to store FPS samples for averaging
+const sampleSize = 10; // Number of samples to average
+
 function measureFPS() {
   const now = performance.now();
   const delta = now - lastFrameTime;
 
   frameCount++;
   if (delta >= 1000) { // Calculate FPS every second
-    currentFPS = (frameCount * 1000) / delta;
+    const currentFPS = (frameCount * 1000) / delta;
     frameCount = 0;
     lastFrameTime = now;
 
-    // Check if FPS is below the threshold
-    if (currentFPS < fpsThreshold && gameActive) {
+    // Add the current FPS to the samples array
+    fpsSamples.push(currentFPS);
+    if (fpsSamples.length > sampleSize) {
+      fpsSamples.shift(); // Remove the oldest sample
+    }
+
+    // Calculate the average FPS
+    const averageFPS = fpsSamples.reduce((sum, fps) => sum + fps, 0) / fpsSamples.length;
+
+    // Debugging: Log the average FPS
+    console.log(`Average FPS: ${averageFPS}`);
+
+    // Check if average FPS is below the threshold
+    if (averageFPS < fpsThreshold && gameActive) {
+      console.log(`Average FPS is below threshold (${fpsThreshold}). Showing popup...`);
       showLowFPSPopup();
+    } else {
+      console.log(`Average FPS is above threshold (${fpsThreshold}). No action taken.`);
     }
   }
 }
 
 function showLowFPSPopup() {
+  // Check if the popup already exists
+  if (document.getElementById('lowFpsPopup')) {
+    return; // Don't show multiple popups
+  }
+
   const popup = document.createElement('div');
   popup.id = 'lowFpsPopup';
   popup.innerHTML = `
@@ -61,17 +84,22 @@ function showLowFPSPopup() {
 
   // Add event listener for the "Switch to Basic Version" button
   document.getElementById('switchToBasicButton').addEventListener('click', () => {
-    switchToBasicVersion();
-    popup.remove();
+    // Redirect to the basic version HTML file
+    window.location.href = 'Older.html';
   });
 
   // Add event listener for the "Continue Anyway" button
   document.getElementById('closePopupButton').addEventListener('click', () => {
     popup.remove();
   });
+
+  // Debugging: Log that the popup is shown
+  console.log("Low FPS popup displayed.");
 }
 
 function switchToBasicVersion() {
+  console.log("Switching to basic version...");
+
   // Stop the current game loop
   gameActive = false;
 
@@ -79,8 +107,14 @@ function switchToBasicVersion() {
   gameContainer.innerHTML = '';
 
   // Load the basic version of the game
-  const script = document.createElement('script');
-  script.src = 'basic-version.js'; // Replace with the path to your basic version
+  const script = document.createElement('html');
+  html.src = 'Older.html'; // Replace with the path to your basic version
+  script.onload = () => {
+    console.log("Basic version loaded successfully.");
+  };
+  script.onerror = () => {
+    console.error("Failed to load basic version.");
+  };
   document.body.appendChild(script);
 }
 
@@ -631,6 +665,7 @@ if (isMobile()) {
 
 function gameLoop() {
   update();
+  measureFPS(); // Measure FPS every frame
   if (gameActive) requestAnimationFrame(gameLoop);
 }
 
